@@ -1,6 +1,8 @@
 from selenium import webdriver
 import time, secrets
 
+WAIT_PERIOD = 120 #2 minutes
+
 LOGIN_PAGE = "https://delivery.realcanadiansuperstore.ca/"
 POSTAL_CODE = "L6H5Z7"
 
@@ -19,7 +21,7 @@ def PostalCodeEnter():
     postalCode_Element.send_keys(POSTAL_CODE)
     time.sleep(2)
     postalCode_Button = browser.find_element_by_xpath(POSTAL_CODE_START_SHOPPING_XPATH).click()
-    time.sleep(2)
+    time.sleep(5)
     confirmButton = browser.find_element_by_xpath(POSTAL_CODE_CONFIRM_BUTTON_XPATH).click()
     time.sleep(2)
 
@@ -33,6 +35,20 @@ def EnterCredentials():
     
 def CheckDelivery():
     button = browser.find_element_by_xpath(DELIVERY_BUTTON_XPATH).click()
+    
+    while(1):
+        time.sleep(WAIT_PERIOD)
+        try:
+            text = browser.find_element_by_xpath("//*[@id='react-tabs-3']/div/div/div/div/div/div/h1").text
+            if(text != "No delivery times available"):
+                sendWhatsAppMessage()
+        except:
+            sendWhatsAppMessage()
+
+
+def sendWhatsAppMessage():
+    print("Sending WhatsApp Reminder")
+
 
 browser = webdriver.Chrome("C:/bin/chromedriver.exe")
 browser.get(LOGIN_PAGE)
