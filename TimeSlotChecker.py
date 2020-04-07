@@ -1,7 +1,11 @@
 from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 import time, secrets
 
 WAIT_PERIOD = 120 #2 minutes
+WAIT_STANDARD = 5
 
 LOGIN_PAGE = "https://delivery.realcanadiansuperstore.ca/"
 POSTAL_CODE = "L6H5Z7"
@@ -16,14 +20,16 @@ SIGN_IN_XPATH = "//*[@id='login']/fieldset/button"
 
 DELIVERY_BUTTON_XPATH = "//*[@id='header']/div/div/div[4]/div[2]/div[2]/span/a"
 
+X_XPATH = "//*[@id='store']/div[7]/div/div/div/div[2]/div/div/div/div/div/div/div[1]/button"
+
 def PostalCodeEnter():
     postalCode_Element = browser.find_element_by_xpath(POSTAL_CODE_XPATH)
     postalCode_Element.send_keys(POSTAL_CODE)
-    time.sleep(2)
+    time.sleep(WAIT_STANDARD)
     postalCode_Button = browser.find_element_by_xpath(POSTAL_CODE_START_SHOPPING_XPATH).click()
-    time.sleep(5)
+    time.sleep(WAIT_STANDARD)
     confirmButton = browser.find_element_by_xpath(POSTAL_CODE_CONFIRM_BUTTON_XPATH).click()
-    time.sleep(2)
+    time.sleep(WAIT_STANDARD)
 
 def EnterCredentials():
     usernameField = browser.find_element_by_xpath(USER_EMAIL_FIELD_XPATH)
@@ -31,19 +37,32 @@ def EnterCredentials():
 
     browser.refresh()
     #give user time to enter their password
-    time.sleep(60)
+    time.sleep(WAIT_PERIOD)
     
 def CheckDelivery():
-    button = browser.find_element_by_xpath(DELIVERY_BUTTON_XPATH).click()
     
     while(1):
-        time.sleep(WAIT_PERIOD)
+        
         try:
+            time.sleep(WAIT_PERIOD)
+            button = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.XPATH, DELIVERY_BUTTON_XPATH)))
+            button.click()
+
+            time.sleep(WAIT_STANDARD)
             text = browser.find_element_by_xpath("//*[@id='react-tabs-3']/div/div/div/div/div/div/h1").text
             if(text != "No delivery times available"):
                 sendWhatsAppMessage()
+            
+            print("nope")
+
         except:
             sendWhatsAppMessage()
+
+        xButton = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.XPATH, X_XPATH)))
+        xButton.click()
+
+        time.sleep(WAIT_STANDARD)
+        browser.refresh()
 
 
 def sendWhatsAppMessage():
