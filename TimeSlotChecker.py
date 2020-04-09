@@ -4,7 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time, secrets
 
-WAIT_PERIOD = 120 #2 minutes
+WAIT_PERIOD = 30 #2 minutes
 WAIT_STANDARD = 5
 
 LOGIN_PAGE = "https://delivery.realcanadiansuperstore.ca/"
@@ -40,26 +40,18 @@ def EnterCredentials():
     time.sleep(WAIT_PERIOD)
     
 def CheckDelivery():
-    
+    button = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.XPATH, DELIVERY_BUTTON_XPATH)))
+    button.click()
+
     while(1):
         
         try:
             time.sleep(WAIT_PERIOD)
-            button = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.XPATH, DELIVERY_BUTTON_XPATH)))
-            button.click()
 
-            time.sleep(WAIT_STANDARD)
-            text = browser.find_element_by_xpath("//*[@id='react-tabs-3']/div/div/div/div/div/div/h1").text
-            if(text != "No delivery times available"):
-                sendWhatsAppMessage()
-            
-            print("nope")
-
+            text = browser.find_element_by_xpath("//*[@id='react-tabs-1']/div/div/div/div/div/div/img")
+            print("none")
         except:
             sendWhatsAppMessage()
-
-        xButton = WebDriverWait(browser, 20).until(EC.element_to_be_clickable((By.XPATH, X_XPATH)))
-        xButton.click()
 
         time.sleep(WAIT_STANDARD)
         browser.refresh()

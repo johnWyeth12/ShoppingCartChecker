@@ -1,1 +1,1 @@
-USER_EMAIL = "lynn.wyeth@gmail.com"
+USER_EMAIL = "johnwyeth@rogers.com"
