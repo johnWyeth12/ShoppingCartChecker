@@ -3,8 +3,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import time, secrets
+from fbchat import Client
+from fbchat.models import *
+from getpass import getpass
 
-WAIT_PERIOD = 30 #2 minutes
+WAIT_PERIOD = 60 #1 minute
 WAIT_STANDARD = 5
 
 LOGIN_PAGE = "https://delivery.realcanadiansuperstore.ca/"
@@ -19,8 +22,6 @@ USER_PASS_FIELD_XPATH = "//*[@id='password']"
 SIGN_IN_XPATH = "//*[@id='login']/fieldset/button"
 
 DELIVERY_BUTTON_XPATH = "//*[@id='header']/div/div/div[4]/div[2]/div[2]/span/a"
-
-X_XPATH = "//*[@id='store']/div[7]/div/div/div/div[2]/div/div/div/div/div/div/div[1]/button"
 
 def PostalCodeEnter():
     postalCode_Element = browser.find_element_by_xpath(POSTAL_CODE_XPATH)
@@ -47,19 +48,27 @@ def CheckDelivery():
         
         try:
             time.sleep(WAIT_PERIOD)
-
             text = browser.find_element_by_xpath("//*[@id='react-tabs-1']/div/div/div/div/div/div/img")
-            print("none")
-        except:
-            sendWhatsAppMessage()
+        except Exception:
+            sendFBMessage()
 
         time.sleep(WAIT_STANDARD)
         browser.refresh()
 
 
-def sendWhatsAppMessage():
-    print("Sending WhatsApp Reminder")
+def sendFBMessage():
+    t = time.localtime()
+    currentTime = time.strftime("%H:%M:%S", t)
+    print("Sending WhatsApp Reminder | " + currentTime)
+    
+    clientList = secrets.getClientList()
+    for i in clientList:
+        name = fbClient.searchForUsers(i)
+        name = name[0]
+        sent = fbClient.send(Message(text= "Delivery Time Slot Available! https://delivery.realcanadiansuperstore.ca/"), thread_id=name.uid)
 
+
+fbClient = Client(secrets.FB_EMAIL, getpass())
 
 browser = webdriver.Chrome("C:/bin/chromedriver.exe")
 browser.get(LOGIN_PAGE)
