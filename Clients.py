@@ -7,3 +7,12 @@ def getStatus(client):
 
 def getClientList():
     return Clients
+
+def getPostalCodes():
+    codes = [Clients[0][1]]
+    for i in Clients:
+        for x in codes:
+            if(i[1] != x):
+                codes.append(i[1])
+    
+    return codes

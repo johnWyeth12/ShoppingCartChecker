@@ -2,13 +2,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import secrets, FacebookInterface, time
+import secrets, FacebookInterface, time, Clients
 
 WAIT_PERIOD = 60 #1 minute
 WAIT_STANDARD = 5
 
 LOGIN_PAGE = "https://delivery.realcanadiansuperstore.ca/"
-POSTAL_CODES = ["L6H5Z7"]
+POSTAL_CODES = Clients.getPostalCodes()
 BROWSERS = [None] * len(POSTAL_CODES)
 ROTATIONS = len(BROWSERS)
 
@@ -44,7 +44,8 @@ def EnterCredentials():
 
         BROWSERS[i].refresh()
         #give user time to enter their password
-        time.sleep(WAIT_PERIOD)
+        input("Press Enter... "+ i + 1)
+        time.sleep(WAIT_STANDARD)
     
 def CheckDelivery():
     for i in range(ROTATIONS):
@@ -52,16 +53,18 @@ def CheckDelivery():
         button.click()
         time.sleep(WAIT_STANDARD)
 
+    #The program remains in here
     while(1):
         
         try:
             time.sleep(WAIT_PERIOD)
             text = browser.find_element_by_xpath("//*[@id='react-tabs-1']/div/div/div/div/div/div/img")
         except Exception:
-            sendFBMessage()
+            FacebookInterface.sendFBMessage()
 
         time.sleep(WAIT_STANDARD)
-        browser.refresh()
+        for i in range(ROTATIONS):
+            BROWSER[i].refresh()
         facebookHeartbeat()
 
 def openBrowsers():
