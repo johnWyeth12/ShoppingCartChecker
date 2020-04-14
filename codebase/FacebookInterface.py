@@ -10,10 +10,9 @@ UNRECOGNIZED_INPUT_MESSAGE = "I'm sorry I don't recognize what you typed.\nSend 
 CHANGED_TO_ACTIVE_MESSAGE = "Ok! You'll recieve notifications about open delivery times.\nSend me 'stop' to NOT recieve notifications anymore."
 CHANGED_TO_INACTIVE_MESSAGE = "Ok! You won't recieve any notifications about open delivery times anymore.\nSend me 'start' to recieve notifications again."
 
-def facebookLogin():
-    fbClient = Client(secrets.FB_EMAIL, getpass())
+fbClient = Client(secrets.FB_EMAIL, getpass())
 
-def sendFBNotifications():
+def sendFBNotifications(activatedPostalCode):
     t = time.localtime()
     currentTime = time.strftime("%H:%M:%S", t)
     print("Sending Facebook Message | " + currentTime)
@@ -21,8 +20,8 @@ def sendFBNotifications():
     clientList = Clients.getClientList()
     for user in clientList:
         #Only send to client if active
-        if(Clients.getStatus(user)):
-            name = fbClient.searchForUsers(user)
+        if(Clients.getPostalCode(user) == activatedPostalCode and Clients.getStatus(user)):
+            name = fbClient.searchForUsers(user['name'])
             name = name[0]
             sendMessengerMessage(NOTIFY_MESSAGE, name)
 
@@ -59,16 +58,13 @@ def facebookHeartbeat():
     messagesRecieved = []
     clientList = Clients.getClientList()
 
-    #for user in clientList:
-    #see if there are any new messages from clients
-    name = fbClient.searchForUsers("John Wyeth")
-    name = name[0]
-    totalThread = fbClient.fetchThreadMessages(thread_id = name.uid, limit = 10) #TODO get logic to know how many messages to get per user
-    lastMessageRecieved = getLastRecievedMessgae(totalThread, name)
+    for user in clientList:
+        #see if there are any new messages from clients
+        name = fbClient.searchForUsers(user['name'])
+        name = name[0]
+        totalThread = fbClient.fetchThreadMessages(thread_id = name.uid, limit = 10) #TODO get logic to know how many messages to get per user
+        lastMessageRecieved = getLastRecievedMessgae(totalThread, name)
 
-    setActiveStatus(name, lastMessageRecieved)
-
-Clients.init()
-fbClient = Client(secrets.FB_EMAIL, getpass())
-facebookHeartbeat()
+        setActiveStatus(name, lastMessageRecieved)
+        #Clients.updateJSON()
 

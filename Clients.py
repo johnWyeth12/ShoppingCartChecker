@@ -1,15 +1,14 @@
 import json
 
 #[Name, Postal Code, Active?]
-Clients = [{'name':"John Wyeth", 'postal code':"L6H5Z7", 'active status':1}]
+Clients = []
 
 def init():
-    f = open("ClientInfo.json", "w")
-    clientData = []
-    for i in Clients:
-        clientData.append(i)
-    
-    json.dump(clientData, f, indent = 2)
+    f = open("ClientInfo.json", "r")
+    Clients = json.load(f)
+
+def updateJSON():
+
 
 def getStatus(client):
     return Clients[client]['active status']
@@ -26,3 +25,4 @@ def getPostalCodes():
     
     return codes
 init()
+print(Clients)

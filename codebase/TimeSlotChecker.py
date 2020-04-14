@@ -8,7 +8,7 @@ WAIT_PERIOD = 60 #1 minute
 WAIT_STANDARD = 5
 
 LOGIN_PAGE = "https://delivery.realcanadiansuperstore.ca/"
-POSTAL_CODES = Clients.getPostalCodes()
+POSTAL_CODES = Clients.makePostalCodes()
 BROWSERS = [None] * len(POSTAL_CODES)
 ROTATIONS = len(BROWSERS)
 
@@ -44,7 +44,7 @@ def EnterCredentials():
 
         BROWSERS[i].refresh()
         #give user time to enter their password
-        input("Press Enter... "+ i + 1)
+        input("Press Enter... "+ str(i + 1))
         time.sleep(WAIT_STANDARD)
     
 def CheckDelivery():
@@ -55,17 +55,17 @@ def CheckDelivery():
 
     #The program remains in here
     while(1):
-        
-        try:
-            time.sleep(WAIT_PERIOD)
-            text = browser.find_element_by_xpath("//*[@id='react-tabs-1']/div/div/div/div/div/div/img")
-        except Exception:
-            FacebookInterface.sendFBNotifications()
+        time.sleep(WAIT_PERIOD)
+        for i in range(ROTATIONS):
+            try:
+                text = BROWSERS[i].find_element_by_xpath("//*[@id='react-tabs-1']/div/div/div/div/div/div/img")
+            except Exception:
+                FacebookInterface.sendFBNotifications(POSTAL_CODES[i])
 
         time.sleep(WAIT_STANDARD)
         for i in range(ROTATIONS):
-            BROWSER[i].refresh()
-        facebookHeartbeat()
+            BROWSERS[i].refresh()
+        FacebookInterface.facebookHeartbeat()
 
 def openBrowsers():
     PostalCodeEnter()
