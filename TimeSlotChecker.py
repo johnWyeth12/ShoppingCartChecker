@@ -60,7 +60,7 @@ def CheckDelivery():
             time.sleep(WAIT_PERIOD)
             text = browser.find_element_by_xpath("//*[@id='react-tabs-1']/div/div/div/div/div/div/img")
         except Exception:
-            FacebookInterface.sendFBMessage()
+            FacebookInterface.sendFBNotifications()
 
         time.sleep(WAIT_STANDARD)
         for i in range(ROTATIONS):
