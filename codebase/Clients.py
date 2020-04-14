@@ -1,7 +1,9 @@
 import json
 
+FILE_PATH = "../ClientInfo.json"
+
 def init():
-    with open("../ClientInfo.json") as f:
+    with open(FILE_PATH) as f:
         temp = json.load(f)
     return temp
 
@@ -25,3 +27,7 @@ def makePostalCodes():
                 codes.append(i['postal code'])
     
     return codes
+
+def updateJSON():
+    with open(FILE_PATH, "w") as f:
+        json.dump(Clients, f, indent=3)

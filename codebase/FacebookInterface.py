@@ -66,5 +66,5 @@ def facebookHeartbeat():
         lastMessageRecieved = getLastRecievedMessgae(totalThread, name)
 
         setActiveStatus(name, lastMessageRecieved)
-        #Clients.updateJSON()
+        Clients.updateJSON()
 
