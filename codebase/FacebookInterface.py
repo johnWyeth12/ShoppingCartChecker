@@ -24,6 +24,8 @@ def sendFBNotifications(activatedPostalCode):
             name = fbClient.searchForUsers(user['name'])
             name = name[0]
             sendMessengerMessage(NOTIFY_MESSAGE, name)
+            #reset the actice status for the user so they aren't bombarded with messages
+            user['active status'] = 0
 
 def sendMessengerMessage(message, name):
     sent = fbClient.send(Message(text = message), thread_id = name.uid)
@@ -37,18 +39,11 @@ def setActiveStatus(user, message):
     message = message.lower()
     clientList = Clients.getClientList()
     if message == START_MESSAGE:
-        #set status to 1 for user
+        #set status to 1 for user when they specify it
         for i in clientList:
             if(i['name'] == user.name and i['active status'] != 1):
-                i[2] = 1
+                i['active status'] = 1
                 sendMessengerMessage(CHANGED_TO_ACTIVE_MESSAGE, user)
-                return
-    elif message == STOP_MESSAGE:
-        #set status to 0 for user
-        for i in clientList:
-            if(i['name'] == user.name and i['active status'] != 0):
-                i[2] = 0
-                sendMessengerMessage(CHANGED_TO_INACTIVE_MESSAGE, user)
                 return
     else:
         #send message explaining what they entered wasn't recognized
@@ -65,6 +60,7 @@ def facebookHeartbeat():
         totalThread = fbClient.fetchThreadMessages(thread_id = name.uid, limit = 10) #TODO get logic to know how many messages to get per user
         lastMessageRecieved = getLastRecievedMessgae(totalThread, name)
 
-        setActiveStatus(name, lastMessageRecieved)
+        if (lastMessageRecieved != None):
+            setActiveStatus(name, lastMessageRecieved)
         Clients.updateJSON()
 

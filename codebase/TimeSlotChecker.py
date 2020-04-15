@@ -55,6 +55,7 @@ def CheckDelivery():
 
     #The program remains in here
     while(1):
+        FacebookInterface.facebookHeartbeat()
         time.sleep(WAIT_PERIOD)
         for i in range(ROTATIONS):
             try:
@@ -65,7 +66,6 @@ def CheckDelivery():
         time.sleep(WAIT_STANDARD)
         for i in range(ROTATIONS):
             BROWSERS[i].refresh()
-        FacebookInterface.facebookHeartbeat()
 
 def openBrowsers():
     PostalCodeEnter()
