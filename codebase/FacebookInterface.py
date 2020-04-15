@@ -1,4 +1,4 @@
-import secrets, time, Clients
+import secrets, time, Clients, os
 from fbchat import Client
 from fbchat.models import *
 from getpass import getpass
@@ -79,4 +79,5 @@ def facebookHeartbeat():
                 user['responses'] = user['responses'] + 1
     
     Clients.updateJSON()
+    os.system('clear')
 

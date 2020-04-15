@@ -56,8 +56,8 @@ def CheckDelivery():
 
     #The program remains in here
     while(1):
-        FacebookInterface.facebookHeartbeat()
         time.sleep(WAIT_PERIOD)
+        FacebookInterface.facebookHeartbeat()
         for i in range(ROTATIONS):
             try:
                 text = BROWSERS[i].find_element_by_xpath("//*[@id='react-tabs-1']/div/div/div/div/div/div/img")
