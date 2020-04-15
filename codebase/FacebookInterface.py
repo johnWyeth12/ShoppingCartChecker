@@ -31,9 +31,11 @@ def sendMessengerMessage(message, name):
     sent = fbClient.send(Message(text = message), thread_id = name.uid)
 
 def getLastRecievedMessgae(messageThread, user):
+    array = []
     for i in messageThread:
         if i.author == user.uid:
-            return i.text
+            array.append(i.text)
+    return array
 
 def setActiveStatus(user, message):
     message = message.lower()
@@ -54,13 +56,15 @@ def facebookHeartbeat():
     clientList = Clients.getClientList()
 
     for user in clientList:
-        #see if there are any new messages from clients
         name = fbClient.searchForUsers(user['name'])
         name = name[0]
-        totalThread = fbClient.fetchThreadMessages(thread_id = name.uid, limit = 10) #TODO get logic to know how many messages to get per user
-        lastMessageRecieved = getLastRecievedMessgae(totalThread, name)
-
-        if (lastMessageRecieved != None):
-            setActiveStatus(name, lastMessageRecieved)
-        Clients.updateJSON()
+        totalThread = fbClient.fetchThreadMessages(thread_id = name.uid, limit = 100) #TODO get logic to know how many messages to get per user
+        lastMessagesRecieved = getLastRecievedMessgae(totalThread, name)
+        if (lastMessagesRecieved != None):
+            #see if there are any new messages from clients
+            if(len(lastMessagesRecieved) > user['responses']):        
+                setActiveStatus(name, lastMessagesRecieved[0])
+                user['responses'] = user['responses'] + 1
+    
+    Clients.updateJSON()
 
