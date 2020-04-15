@@ -5,17 +5,23 @@ from getpass import getpass
 
 START_MESSAGE = "start"
 STOP_MESSAGE = "stop"
-NOTIFY_MESSAGE = "Delivery Time Slot Available! https://delivery.realcanadiansuperstore.ca/"
-UNRECOGNIZED_INPUT_MESSAGE = "I'm sorry I don't recognize what you typed.\nSend me 'start' to recieve delivery time notifications.\nSend me 'stop' to NOT recieve notifications."
+WELCOME_MESSAGE = "Welcome! This is an automated message to start off this thread"
+NOTIFY_MESSAGE = "Delivery Time Slot Available! https://delivery.realcanadiansuperstore.ca/ \n\n Notifications have automatically been turned OFF. To recieve notifications again, please send me 'start'"
+UNRECOGNIZED_INPUT_MESSAGE = "I'm sorry I don't recognize what you typed.\nSend me 'start' to recieve delivery time notifications."
 CHANGED_TO_ACTIVE_MESSAGE = "Ok! You'll recieve notifications about open delivery times.\nSend me 'stop' to NOT recieve notifications anymore."
 CHANGED_TO_INACTIVE_MESSAGE = "Ok! You won't recieve any notifications about open delivery times anymore.\nSend me 'start' to recieve notifications again."
 
 fbClient = Client(secrets.FB_EMAIL, getpass())
 
+def initAllClients():
+    clientList = Clients.getClientList()
+    for i in clientList:
+        name = fbClient.searchForUsers(i['name'])[0]
+        sendMessengerMessage(WELCOME_MESSAGE, name)
+
 def sendFBNotifications(activatedPostalCode):
     t = time.localtime()
     currentTime = time.strftime("%H:%M:%S", t)
-    print("Sending Facebook Message | " + currentTime)
     
     clientList = Clients.getClientList()
     for user in clientList:
@@ -47,12 +53,18 @@ def setActiveStatus(user, message):
                 i['active status'] = 1
                 sendMessengerMessage(CHANGED_TO_ACTIVE_MESSAGE, user)
                 return
+    elif message == STOP_MESSAGE:
+        #set status to 1 for user when they specify it
+        for i in clientList:
+            if(i['name'] == user.name and i['active status'] != 0):
+                i['active status'] = 0
+                sendMessengerMessage(CHANGED_TO_INACTIVE_MESSAGE, user)
+                return
     else:
         #send message explaining what they entered wasn't recognized
         sendMessengerMessage(UNRECOGNIZED_INPUT_MESSAGE, user)
 
 def facebookHeartbeat():
-    messagesRecieved = []
     clientList = Clients.getClientList()
 
     for user in clientList:

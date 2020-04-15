@@ -1,14 +1,18 @@
 import json
 
-#[Name, Postal Code, Active?]
-Clients = []
+FILE_PATH = "../ClientInfo.json"
 
 def init():
-    f = open("ClientInfo.json", "r")
-    Clients = json.load(f)
+    with open(FILE_PATH) as f:
+        temp = json.load(f)
+    return temp
+
+#[Name, Postal Code, Active?]
+Clients = init()
 
 def updateJSON():
-
+    with open(FILE_PATH, "w") as f:
+        json.dump(Clients, f, indent=3)
 
 def getStatus(client):
     return Clients[client]['active status']
@@ -16,13 +20,10 @@ def getStatus(client):
 def getClientList():
     return Clients
 
-def getPostalCodes():
-    codes = [Clients[0]['postal code']]
+def makePostalCodes():
+    allCodes = []
     for i in Clients:
-        for x in codes:
-            if(i[1] != x):
-                codes.append(i['postal code'])
-    
+        allCodes.append(i['postal code'])
+    codes = list(dict.fromkeys(allCodes))
     return codes
-init()
-print(Clients)
+

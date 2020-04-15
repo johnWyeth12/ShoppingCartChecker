@@ -20,12 +20,10 @@ def getClientList():
     return Clients
 
 def makePostalCodes():
-    codes = [Clients[0]['postal code']]
+    allCodes = []
     for i in Clients:
-        for x in codes:
-            if(i['postal code'] != x):
-                codes.append(i['postal code'])
-    
+        allCodes.append(i['postal code'])
+    codes = list(dict.fromkeys(allCodes))
     return codes
 
 def updateJSON():

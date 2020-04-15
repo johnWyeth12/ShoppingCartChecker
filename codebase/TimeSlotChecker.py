@@ -9,6 +9,7 @@ WAIT_STANDARD = 5
 
 LOGIN_PAGE = "https://delivery.realcanadiansuperstore.ca/"
 POSTAL_CODES = Clients.makePostalCodes()
+print(POSTAL_CODES)
 BROWSERS = [None] * len(POSTAL_CODES)
 ROTATIONS = len(BROWSERS)
 
