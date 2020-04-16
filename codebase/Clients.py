@@ -16,6 +16,12 @@ def getStatus(client):
 def getPostalCode(client):
     return client['postal code']
 
+def getName(client):
+    return client['name']
+
+def getResponses(client):
+    return client['responses']
+
 def getClientList():
     return Clients
 

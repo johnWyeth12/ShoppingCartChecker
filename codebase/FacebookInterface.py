@@ -37,11 +37,11 @@ def sendMessengerMessage(message, name):
     sent = fbClient.send(Message(text = message), thread_id = name.uid)
 
 def getLastRecievedMessgae(messageThread, user):
-    array = []
+    messageArray = []
     for i in messageThread:
         if i.author == user.uid:
-            array.append(i.text)
-    return array
+            messageArray.append(i.text)
+    return messageArray
 
 def setActiveStatus(user, message):
     message = message.lower()
@@ -49,14 +49,14 @@ def setActiveStatus(user, message):
     if message == START_MESSAGE:
         #set status to 1 for user when they specify it
         for i in clientList:
-            if(i['name'] == user.name and i['active status'] != 1):
+            if(Clients.getName(i) == user.name and Clients.getStatus(i) != 1):
                 i['active status'] = 1
                 sendMessengerMessage(CHANGED_TO_ACTIVE_MESSAGE, user)
                 return
     elif message == STOP_MESSAGE:
         #set status to 1 for user when they specify it
         for i in clientList:
-            if(i['name'] == user.name and i['active status'] != 0):
+            if(Clients.getName(i) == user.name and Clients.getStatus(i) != 0):
                 i['active status'] = 0
                 sendMessengerMessage(CHANGED_TO_INACTIVE_MESSAGE, user)
                 return
@@ -68,13 +68,13 @@ def facebookHeartbeat():
     clientList = Clients.getClientList()
 
     for user in clientList:
-        name = fbClient.searchForUsers(user['name'])
+        name = fbClient.searchForUsers(getName(user))
         name = name[0]
         totalThread = fbClient.fetchThreadMessages(thread_id = name.uid, limit = 100) #TODO get logic to know how many messages to get per user
         lastMessagesRecieved = getLastRecievedMessgae(totalThread, name)
         if (lastMessagesRecieved != None):
             #see if there are any new messages from clients
-            if(len(lastMessagesRecieved) > user['responses']):        
+            if(len(lastMessagesRecieved) > Clients.getResponses(user)):        
                 setActiveStatus(name, lastMessagesRecieved[0])
                 user['responses'] = user['responses'] + 1
     
