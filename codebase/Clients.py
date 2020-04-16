@@ -27,5 +27,14 @@ def makePostalCodes():
     return codes
 
 def updateJSON():
-    with open(FILE_PATH, "w") as f:
-        json.dump(Clients, f, indent=3)
+    fileError = False
+
+    while(not fileError):
+        try:
+            with open(FILE_PATH, "w") as f:
+                json.dump(Clients, f, indent=3)
+            #If program gets here, there was no issue with updating the client file
+            fileError = True
+        except Exception:
+            #do nothing - keeps loop going
+    

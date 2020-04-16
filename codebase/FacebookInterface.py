@@ -5,11 +5,11 @@ from getpass import getpass
 
 START_MESSAGE = "start"
 STOP_MESSAGE = "stop"
-WELCOME_MESSAGE = "Welcome! This is an automated message to start off this thread"
-NOTIFY_MESSAGE = "Delivery Time Slot Available! https://delivery.realcanadiansuperstore.ca/ \n\n Notifications have automatically been turned OFF. To recieve notifications again, please send me 'start'"
+WELCOME_MESSAGE = "Welcome! This is an automated message to start off this grocery ordering notification system\nSend me'start' to begin receiving notifications"
+NOTIFY_MESSAGE = "Delivery Time Slot Available! https://delivery.realcanadiansuperstore.ca/ \n\n Notifications have automatically been turned OFF. To receive notifications again, please send me 'start'"
 UNRECOGNIZED_INPUT_MESSAGE = "I'm sorry I don't recognize what you typed.\nSend me 'start' to recieve delivery time notifications."
-CHANGED_TO_ACTIVE_MESSAGE = "Ok! You'll recieve notifications about open delivery times.\nSend me 'stop' to NOT recieve notifications anymore."
-CHANGED_TO_INACTIVE_MESSAGE = "Ok! You won't recieve any notifications about open delivery times anymore.\nSend me 'start' to recieve notifications again."
+CHANGED_TO_ACTIVE_MESSAGE = "Ok! You'll receive notifications about open delivery times.\nSend me 'stop' to NOT receive notifications anymore."
+CHANGED_TO_INACTIVE_MESSAGE = "Ok! You won't receive any notifications about open delivery times anymore.\nSend me 'start' to receive notifications again."
 
 fbClient = Client(secrets.FB_EMAIL, getpass())
 
