@@ -5,7 +5,7 @@ from getpass import getpass
 
 START_MESSAGE = "start"
 STOP_MESSAGE = "stop"
-WELCOME_MESSAGE = "Welcome! This is an automated message to start off this grocery ordering notification system\nSend me'start' to begin receiving notifications"
+WELCOME_MESSAGE = "Welcome! This is an automated message to start off this grocery ordering notification system\nSend me 'start' to begin receiving notifications"
 NOTIFY_MESSAGE = "Delivery Time Slot Available! https://delivery.realcanadiansuperstore.ca/ \n\n Notifications have automatically been turned OFF. To receive notifications again, please send me 'start'"
 UNRECOGNIZED_INPUT_MESSAGE = "I'm sorry I don't recognize what you typed.\nSend me 'start' to recieve delivery time notifications."
 CHANGED_TO_ACTIVE_MESSAGE = "Ok! You'll receive notifications about open delivery times.\nSend me 'stop' to NOT receive notifications anymore."
@@ -16,8 +16,10 @@ fbClient = Client(secrets.FB_EMAIL, getpass())
 def initAllClients():
     clientList = Clients.getClientList()
     for i in clientList:
-        name = fbClient.searchForUsers(i['name'])[0]
-        sendMessengerMessage(WELCOME_MESSAGE, name)
+        if(Clients.getInitilized(i) == 0):
+            name = fbClient.searchForUsers(i['name'])[0]
+            sendMessengerMessage(WELCOME_MESSAGE, name)
+            i['initilized'] = 1
 
 def sendFBNotifications(activatedPostalCode):
     t = time.localtime()
@@ -65,10 +67,11 @@ def setActiveStatus(user, message):
         sendMessengerMessage(UNRECOGNIZED_INPUT_MESSAGE, user)
 
 def facebookHeartbeat():
+    initAllClients()
     clientList = Clients.getClientList()
 
     for user in clientList:
-        name = fbClient.searchForUsers(getName(user))
+        name = fbClient.searchForUsers(Clients.getName(user))
         name = name[0]
         totalThread = fbClient.fetchThreadMessages(thread_id = name.uid, limit = 100) #TODO get logic to know how many messages to get per user
         lastMessagesRecieved = getLastRecievedMessgae(totalThread, name)
@@ -78,6 +81,7 @@ def facebookHeartbeat():
                 setActiveStatus(name, lastMessagesRecieved[0])
                 user['responses'] = user['responses'] + 1
     
+    #Clients.updateClientList()
     Clients.updateJSON()
-    os.system('clear')
+    os.system('cls')
 

@@ -3,18 +3,28 @@
       "name": "John Wyeth",
       "postal code": "L6H5Z7",
       "active status": 0,
-      "responses": 0
+      "responses": 5,
+      "initilized": 1
    },
    {
       "name": "Francisca Lombard",
       "postal code": "L6H0K3",
       "active status": 0,
-      "responses": 0
+      "responses": 1,
+      "initilized": 1
    },
    {
       "name": "Lynn Wyeth (Rossouw)",
       "postal code": "L6H5Z7",
       "active status": 0,
-      "responses": 0
+      "responses": 0,
+      "initilized": 1
+   },
+   {
+      "name": "Gaynor Jones Groenewald",
+      "postal code": "L6M0B4",
+      "active status": 0,
+      "responses": 1,
+      "initilized": 1
    }
 ]

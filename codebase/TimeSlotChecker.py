@@ -28,14 +28,16 @@ def PostalCodeEnter():
         BROWSERS[i] = webdriver.Chrome("C:/bin/chromedriver.exe")
         BROWSERS[i].get(LOGIN_PAGE)
 
-        postalCode_Element = BROWSERS[i].find_element_by_xpath(POSTAL_CODE_XPATH)
+        postalCode_Element = WebDriverWait(BROWSERS[i], 20).until(EC.element_to_be_clickable((By.XPATH, POSTAL_CODE_XPATH)))
         postalCode_Element.send_keys(POSTAL_CODES[i])
         time.sleep(WAIT_STANDARD)
 
-        postalCode_Button = BROWSERS[i].find_element_by_xpath(POSTAL_CODE_START_SHOPPING_XPATH).click()
+        postalCode_Button = WebDriverWait(BROWSERS[i], 20).until(EC.element_to_be_clickable((By.XPATH, POSTAL_CODE_START_SHOPPING_XPATH)))
+        postalCode_Button.click()
         time.sleep(WAIT_STANDARD)
 
-        confirmButton = BROWSERS[i].find_element_by_xpath(POSTAL_CODE_CONFIRM_BUTTON_XPATH).click()
+        confirmButton = WebDriverWait(BROWSERS[i], 20).until(EC.element_to_be_clickable((By.XPATH, POSTAL_CODE_CONFIRM_BUTTON_XPATH)))
+        confirmButton.click()
         time.sleep(WAIT_STANDARD)
 
 def EnterCredentials():

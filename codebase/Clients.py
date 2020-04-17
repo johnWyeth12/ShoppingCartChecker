@@ -22,6 +22,9 @@ def getName(client):
 def getResponses(client):
     return client['responses']
 
+def getInitilized(client):
+    return client['initilized']
+
 def getClientList():
     return Clients
 
@@ -42,5 +45,9 @@ def updateJSON():
             #If program gets here, there was no issue with updating the client file
             fileError = True
         except Exception:
+            print("error when updating JSON file")
             #do nothing - keeps loop going
-    
+
+def updateClientList():
+    with open(FILE_PATH, "r") as f:
+        Clients = json.load(f)
